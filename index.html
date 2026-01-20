@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Razak Memorial School Portal</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+        .container { display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .box { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
+        h2 { color: #667eea; margin-bottom: 20px; text-align: center; }
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; margin-bottom: 5px; color: #333; font-weight: 500; }
+        .input-group input, .input-group select, .input-group textarea { width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; }
+        .btn { width: 100%; padding: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: 600; margin-top: 10px; }
+        .btn:hover { opacity: 0.9; }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .link { text-align: center; margin-top: 15px; color: #666; }
+        .link a { color: #667eea; text-decoration: none; font-weight: 600; }
+        .dashboard { display: none; padding: 20px; }
+        .header { background: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        .menu { background: white; padding: 15px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); display: flex; gap: 10px; flex-wrap: wrap; }
+        .menu-btn { padding: 10px 20px; background: #f0f0f0; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        .menu-btn.active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .section { display: none; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        .section.active { display: block; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e0e0e0; }
+        th { background: #f8f9fa; font-weight: 600; }
+        .grade { padding: 5px 15px; border-radius: 20px; font-weight: 600; display: inline-block; }
+        .grade-a { background: #d4edda; color: #155724; }
+        .grade-b { background: #d1ecf1; color: #0c5460; }
+        .grade-c { background: #fff3cd; color: #856404; }
+        .card { background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 15px; border-left: 4px solid #667eea; }
+        .loading { text-align: center; padding: 40px; color: #666; }
+        .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .course-row { display: grid; grid-template-columns: 1fr 2fr 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+        .course-row input, .course-row select { padding: 8px; border: 1px solid #ddd; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <!-- Home -->
+    <div class="container" id="home">
+        <div class="box">
+            <h2>🎓 Razak Memorial School</h2>
+            <p style="text-align: center; color: #666; margin-bottom: 20px;">Student Portal</p>
+            <button class="btn" onclick="showPage('login')">Login</button>
+            <button class="btn" style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);" onclick="showPage('signup')">Sign Up</button>
+        </div>
+    </div>
+
+    <!-- Signup -->
+    <div class="container" id="signup" style="display:none;">
+        <div class="box">
+            <h2>📝 Create Account</h2>
+            <form id="signupForm" onsubmit="signup(event)">
+                <div class="input-group"><label>Full Name *</label><input type="text" id="sName" required></div>
+                <div class="grid2">
+                    <div class="input-group"><label>Date of Birth *</label><input type="date" id="sDob" required></div>
+                    <div class="input-group"><label>Gender *</label><select id="sGender" required><option value="">Select</option><option>Male</option><option>Female</option></select></div>
+                </div>
+                <div class="input-group"><label>Ghana Card *</label><input type="text" id="sGhana" required></div>
+                <div class="input-group"><label>Phone *</label><input type="tel" id="sPhone" required></div>
+                <div class="input-group"><label>Address *</label><input type="text" id="sAddr" required></div>
+                <div class="input-group"><label>Student ID *</label><input type="text" id="sID" required placeholder="e.g., RMS2026001"></div>
+                <div class="input-group"><label>Program *</label><input type="text" id="sProg" required></div>
+                <div class="grid2">
+                    <div class="input-group"><label>Department *</label><select id="sDept" required><option value="">Select</option><option>Science</option><option>Arts</option><option>Business</option><option>Engineering</option></select></div>
+                    <div class="input-group"><label>Year *</label><select id="sYear" required><option value="">Select</option><option>Year 1</option><option>Year 2</option><option>Year 3</option><option>Year 4</option></select></div>
+                </div>
+                <div class="input-group"><label>Guardian Name *</label><input type="text" id="sGuard" required></div>
+                <div class="input-group"><label>Guardian Phone *</label><input type="tel" id="sGuardP" required></div>
+                <div class="input-group"><label>Email *</label><input type="email" id="sEmail" required></div>
+                <div class="input-group"><label>Username *</label><input type="text" id="sUser" required></div>
+                <div class="input-group"><label>Password *</label><input type="password" id="sPass" required minlength="6"></div>
+                <div class="input-group"><label>Confirm Password *</label><input type="password" id="sPass2" required minlength="6"></div>
+                <button type="submit" class="btn" id="signupBtn">Create Account</button>
+            </form>
+            <div class="link">Have an account? <a href="#" onclick="showPage('login')">Login</a></div>
+        </div>
+    </div>
+
+    <!-- Login -->
+    <div class="container" id="login" style="display:none;">
+        <div class="box">
+            <h2>🎓 Razak Memorial School</h2>
+            <form id="loginForm" onsubmit="login(event)">
+                <div class="input-group"><label>User Type</label><select id="lType"><option value="student">Student</option><option value="admin">Admin</option></select></div>
+                <div class="input-group"><label>Username</label><input type="text" id="lUser" required></div>
+                <div class="input-group"><label>Password</label><input type="password" id="lPass" required></div>
+                <button type="submit" class="btn" id="loginBtn">Login</button>
+            </form>
+            <div class="link">No account? <a href="#" onclick="showPage('signup')">Sign Up</a> | <a href="#" onclick="showPage('home')">Home</a></div>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard" id="dashboard">
+        <div class="header">
+            <h2 id="welcome">Welcome!</h2>
+            <button class="btn" onclick="logout()" style="max-width: 150px;">Logout</button>
+        </div>
+        <div class="menu">
+            <button class="menu-btn active" onclick="showSection('home')">🏠 Home</button>
+            <button class="menu-btn" onclick="showSection('grades')">📊 Grades</button>
+            <button class="menu-btn" onclick="showSection('news')">📰 News</button>
+            <button class="menu-btn admin-only" style="display:none;" onclick="showSection('upload')">📤 Upload Results</button>
+            <button class="menu-btn admin-only" style="display:none;" onclick="showSection('students')">👥 Students</button>
+        </div>
+
+        <div class="section active" id="homeSection">
+            <div style="text-align: center; padding: 40px;">
+                <div style="font-size: 80px;">🎓</div>
+                <h1 style="color: #667eea; margin: 20px 0;">Welcome to Razak Memorial School!</h1>
+                <p style="color: #666; font-size: 18px;">Select a menu option above to get started</p>
+            </div>
+        </div>
+
+        <div class="section" id="gradesSection">
+            <h2 style="color: #667eea; margin-bottom: 20px;">📊 My Grades</h2>
+            <div id="gradesContent" class="loading">Loading grades...</div>
+        </div>
+
+        <div class="section" id="newsSection">
+            <h2 style="color: #667eea; margin-bottom: 20px;">📰 Campus News</h2>
+            <div class="card"><h3>Welcome to New Semester!</h3><p>All students are advised to check their schedules and attend orientation on Monday.</p><p style="color: #999; margin-top: 10px; font-size: 0.9em;">Posted: Jan 20, 2026</p></div>
+            <div class="card"><h3>Library Hours Extended</h3><p>The library will now be open until 10 PM on weekdays during exam period.</p><p style="color: #999; margin-top: 10px; font-size: 0.9em;">Posted: Jan 18, 2026</p></div>
+        </div>
+
+        <div class="section" id="uploadSection">
+            <h2 style="color: #667eea; margin-bottom: 20px;">📊 Upload Student Results</h2>
+            <form onsubmit="uploadResults(event)">
+                <div class="input-group"><label>Student ID</label><input type="text" id="rID" required></div>
+                <div class="input-group"><label>Semester</label><select id="rSem" required><option value="">Select</option><option>Semester 1</option><option>Semester 2</option></select></div>
+                <h3 style="margin: 20px 0 10px 0; color: #667eea;">Courses</h3>
+                <div id="courses">
+                    <div class="course-row">
+                        <input type="text" placeholder="Code" class="cCode" required>
+                        <input type="text" placeholder="Course Name" class="cName" required>
+                        <input type="number" placeholder="Credits" class="cCred" min="1" max="6" required>
+                        <select class="cGrade" required><option value="">Grade</option><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
+                    </div>
+                </div>
+                <button type="button" class="btn" onclick="addCourse()" style="background: #28a745; margin-bottom: 10px;">+ Add Course</button>
+                <button type="submit" class="btn">Upload Results</button>
+            </form>
+        </div>
+
+        <div class="section" id="studentsSection">
+            <h2 style="color: #667eea; margin-bottom: 20px;">👥 Registered Students</h2>
+            <div id="studentsList" class="loading">Loading students...</div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getDatabase, ref, set, get, push } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+        const app = initializeApp({
+            apiKey: "AIzaSyAHMz0Vz4PE5yqaXM2O8RY2vQSRChXyElc",
+            authDomain: "abdul-razak-memorial.firebaseapp.com",
+            projectId: "abdul-razak-memorial",
+            storageBucket: "abdul-razak-memorial.firebasestorage.app",
+            messagingSenderId: "258707195000",
+            appId: "1:258707195000:web:60cc66e1e9064d5a3d998d",
+            databaseURL: "https://abdul-razak-memorial-default-rtdb.firebaseio.com"
+        });
+
+        window.db = getDatabase(app);
+        window.dbRef = ref;
+        window.dbSet = set;
+        window.dbGet = get;
+        window.dbPush = push;
+        window.firebaseReady = true;
+    </script>
+
+    <script>
+        let user = null;
+
+        function showPage(page) {
+            ['home','signup','login','dashboard'].forEach(p => document.getElementById(p).style.display = 'none');
+            document.getElementById(page).style.display = page === 'dashboard' ? 'block' : 'flex';
+        }
+
+        function showSection(sec) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(sec + 'Section').classList.add('active');
+            event.target.classList.add('active');
+            if(sec === 'grades') loadGrades();
+            if(sec === 'students') loadStudents();
+        }
+
+        async function signup(e) {
+            e.preventDefault();
+            const btn = document.getElementById('signupBtn');
+            btn.disabled = true;
+            btn.textContent = 'Creating...';
+
+            const data = {
+                name: document.getElementById('sName').value,
+                dob: document.getElementById('sDob').value,
+                gender: document.getElementById('sGender').value,
+                ghanaCard: document.getElementById('sGhana').value,
+                phone: document.getElementById('sPhone').value,
+                address: document.getElementById('sAddr').value,
+                studentID: document.getElementById('sID').value,
+                program: document.getElementById('sProg').value,
+                department: document.getElementById('sDept').value,
+                year: document.getElementById('sYear').value,
+                guardianName: document.getElementById('sGuard').value,
+                guardianPhone: document.getElementById('sGuardP').value,
+                email: document.getElementById('sEmail').value,
+                username: document.getElementById('sUser').value,
+                password: document.getElementById('sPass').value,
+                type: 'student'
+            };
+
+            if(data.password !== document.getElementById('sPass2').value) {
+                alert('Passwords do not match!');
+                btn.disabled = false;
+                btn.textContent = 'Create Account';
+                return;
+            }
+
+            try {
+                const snap = await window.dbGet(window.dbRef(window.db, 'users'));
+                if(snap.exists()) {
+                    const users = snap.val();
+                    for(let k in users) {
+                        if(users[k].username === data.username) {
+                            alert('Username exists!');
+                            btn.disabled = false;
+                            btn.textContent = 'Create Account';
+                            return;
+                        }
+                        if(users[k].studentID === data.studentID) {
+                            alert('Student ID exists!');
+                            btn.disabled = false;
+                            btn.textContent = 'Create Account';
+                            return;
+                        }
+                    }
+                }
+                const newRef = window.dbPush(window.dbRef(window.db, 'users'));
+                await window.dbSet(newRef, data);
+                alert('Account created! You can now login.');
+                document.getElementById('signupForm').reset();
+                showPage('login');
+            } catch(err) {
+                console.error(err);
+                alert('Error creating account. Please try again.');
+            }
+            btn.disabled = false;
+            btn.textContent = 'Create Account';
+        }
+
+        async function login(e) {
+            e.preventDefault();
+            const btn = document.getElementById('loginBtn');
+            btn.disabled = true;
+            btn.textContent = 'Logging in...';
+
+            const username = document.getElementById('lUser').value;
+            const password = document.getElementById('lPass').value;
+            const type = document.getElementById('lType').value;
+
+            if(type === 'admin' && username === 'admin' && password === 'admin123') {
+                user = {username: 'admin', type: 'admin', name: 'Administrator'};
+                showDashboard();
+                btn.disabled = false;
+                btn.textContent = 'Login';
+                return;
+            }
+
+            try {
+                const snap = await window.dbGet(window.dbRef(window.db, 'users'));
+                if(snap.exists()) {
+                    const users = snap.val();
+                    for(let k in users) {
+                        if(users[k].username === username && users[k].password === password && users[k].type === type) {
+                            user = {...users[k], id: k};
+                            showDashboard();
+                            btn.disabled = false;
+                            btn.textContent = 'Login';
+                            return;
+                        }
+                    }
+                }
+                alert('Invalid credentials!');
+            } catch(err) {
+                console.error(err);
+                alert('Login error. Please try again.');
+            }
+            btn.disabled = false;
+            btn.textContent = 'Login';
+        }
+
+        function showDashboard() {
+            showPage('dashboard');
+            document.getElementById('welcome').textContent = `Welcome, ${user.name}!`;
+            if(user.type === 'admin') {
+                document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'block');
+            }
+        }
+
+        function logout() {
+            user = null;
+            document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
+            showPage('home');
+        }
+
+        async function loadGrades() {
+            const content = document.getElementById('gradesContent');
+            if(!user || user.type !== 'student') {
+                content.innerHTML = '<p class="loading">Only students can view grades.</p>';
+                return;
+            }
+
+            try {
+                const snap = await window.dbGet(window.dbRef(window.db, 'results/' + user.studentID));
+                if(!snap.exists()) {
+                    content.innerHTML = '<p class="loading">No results available yet.</p>';
+                    return;
+                }
+
+                const results = snap.val();
+                let html = '';
+                for(let sem in results) {
+                    const courses = results[sem];
+                    html += `<h3 style="color: #667eea; margin-top: 20px;">${sem}</h3><table><tr><th>Code</th><th>Course</th><th>Credits</th><th>Grade</th></tr>`;
+                    let total = 0, credits = 0;
+                    const pts = {A:4, B:3, C:2, D:1, F:0};
+                    courses.forEach(c => {
+                        const gc = c.grade.startsWith('A') ? 'grade-a' : c.grade.startsWith('B') ? 'grade-b' : c.grade.startsWith('C') ? 'grade-c' : 'grade-d';
+                        html += `<tr><td>${c.code}</td><td>${c.name}</td><td>${c.credits}</td><td><span class="grade ${gc}">${c.grade}</span></td></tr>`;
+                        total += pts[c.grade] * c.credits;
+                        credits += c.credits;
+                    });
+                    html += `</table><p style="margin-top: 15px; font-weight: 600;">GPA: ${(total/credits).toFixed(2)}</p>`;
+                }
+                content.innerHTML = html;
+            } catch(err) {
+                console.error(err);
+                content.innerHTML = '<p class="loading">Error loading grades.</p>';
+            }
+        }
+
+        async function uploadResults(e) {
+            e.preventDefault();
+            const studentID = document.getElementById('rID').value;
+            const semester = document.getElementById('rSem').value;
+            
+            const courses = [];
+            document.querySelectorAll('.course-row').forEach(row => {
+                const c = {
+                    code: row.querySelector('.cCode').value,
+                    name: row.querySelector('.cName').value,
+                    credits: parseInt(row.querySelector('.cCred').value),
+                    grade: row.querySelector('.cGrade').value
+                };
+                if(c.code && c.name && c.credits && c.grade) courses.push(c);
+            });
+
+            if(courses.length === 0) {
+                alert('Add at least one course!');
+                return;
+            }
+
+            try {
+                await window.dbSet(window.dbRef(window.db, `results/${studentID}/${semester}`), courses);
+                alert('Results uploaded successfully!');
+                document.getElementById('rID').value = '';
+                document.getElementById('rSem').value = '';
+                document.getElementById('courses').innerHTML = `<div class="course-row"><input type="text" placeholder="Code" class="cCode" required><input type="text" placeholder="Course Name" class="cName" required><input type="number" placeholder="Credits" class="cCred" min="1" max="6" required><select class="cGrade" required><option value="">Grade</option><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select></div>`;
+            } catch(err) {
+                console.error(err);
+                alert('Error uploading results.');
+            }
+        }
+
+        function addCourse() {
+            const div = document.createElement('div');
+            div.className = 'course-row';
+            div.innerHTML = `<input type="text" placeholder="Code" class="cCode" required><input type="text" placeholder="Course Name" class="cName" required><input type="number" placeholder="Credits" class="cCred" min="1" max="6" required><select class="cGrade" required><option value="">Grade</option><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>`;
+            document.getElementById('courses').appendChild(div);
+        }
+
+        async function loadStudents() {
+            const list = document.getElementById('studentsList');
+            try {
+                const snap = await window.dbGet(window.dbRef(window.db, 'users'));
+                if(!snap.exists()) {
+                    list.innerHTML = '<p class="loading">No students registered.</p>';
+                    return;
+                }
+
+                const users = snap.val();
+                let html = '';
+                for(let k in users) {
+                    const s = users[k];
+                    if(s.type === 'student') {
+                        html += `<div class="card"><h3>${s.name}</h3><p><strong>ID:</strong> ${s.studentID} | <strong>Email:</strong> ${s.email}</p><p><strong>Program:</strong> ${s.program} | <strong>Year:</strong> ${s.year}</p><p><strong>Guardian:</strong> ${s.guardianName} (${s.guardianPhone})</p></div>`;
+                    }
+                }
+                list.innerHTML = html || '<p class="loading">No students found.</p>';
+            } catch(err) {
+                console.error(err);
+                list.innerHTML = '<p class="loading">Error loading students.</p>';
+            }
+        }
+    </script>
+</body>
+</html>
